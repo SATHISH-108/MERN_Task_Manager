@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:7001/api";
+
 const API = axios.create({
-  baseURL: "https://mern-task-manager-rho-five.vercel.app/api",
+  baseURL: API_BASE,
   withCredentials: true,
 });
 
@@ -18,7 +20,7 @@ API.interceptors.response.use(
       original._retry = true;
       try {
         await axios.post(
-          "http://localhost:7001/api/users/refresh",
+          `${API_BASE}/users/refresh`,
           {},
           { withCredentials: true },
         );
