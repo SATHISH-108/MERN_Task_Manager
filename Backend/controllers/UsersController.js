@@ -77,12 +77,19 @@ const usersRegister = async (request, response) => {
 
 const usersLogin = async (request, response) => {
   try {
-    const { email, password } = request.body;
-    const existingUser = await UserModel.findOne({ email });
+    const { email, password, role } = request.body;
+    const existingUser = await UserModel.findOne({ email, role });
     if (!existingUser) {
-      return response
-        .status(404)
-        .json({ success: false, message: "User Not Found" });
+      return response.status(404).json({
+        success: false,
+        message: "User Not Found / Users Details Not Matched",
+      });
+    }
+    if (!role && !email) {
+      return response.status(400).json({
+        success: false,
+        message: "Email & Role Fields Are Required",
+      });
     }
     const isMatch = await bcrypt.compare(password, existingUser.password);
     if (!isMatch) {
