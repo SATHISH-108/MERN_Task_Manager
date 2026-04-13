@@ -18,12 +18,20 @@ const app = express();
 const PORT = process.env.PORT || 7002;
 
 const server = http.createServer(app);
-const CLIENT_ORIGIN =
-  process.env.CLIENT_ORIGIN || "https://mern-task-manager-hnjf.vercel.app/";
+const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "http://localhost:5173";
+const allowedOrigins = CLIENT_ORIGIN.split(",")
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+const corsOriginFn = (origin, callback) => {
+  if (!origin) return callback(null, true);
+  if (allowedOrigins.includes(origin)) return callback(null, true);
+  return callback(new Error(`Not allowed by CORS: ${origin}`));
+};
 
 const io = new Server(server, {
   cors: {
-    origin: CLIENT_ORIGIN,
+    origin: corsOriginFn,
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   },
@@ -33,7 +41,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: CLIENT_ORIGIN,
+    origin: corsOriginFn,
     credentials: true,
   }),
 );
