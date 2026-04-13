@@ -12,7 +12,6 @@ import taskRouter from "./routes/taskRouter.js";
 import dashboardRouter from "./routes/dashboardRouter.js";
 
 dotenv.config();
-dbConnection();
 
 const app = express();
 const PORT = process.env.PORT || 7002;
@@ -46,9 +45,15 @@ app.use(
   }),
 );
 
-app.use((req, res, next) => {
-  req.io = io;
-  next();
+app.use(async (req, res, next) => {
+  try {
+    await dbConnection();
+    req.io = io;
+    next();
+  } catch (err) {
+    console.error("DB middleware error:", err);
+    res.status(500).json({ success: false, message: "Database unavailable" });
+  }
 });
 
 app.get("/", (req, res) => res.send("API Working"));
