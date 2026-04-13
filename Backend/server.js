@@ -82,6 +82,10 @@ redisSub.on("message", (channel, message) => {
   }
 });
 
-server.listen(PORT, () => {
-  console.log(`Server + Socket running at http://localhost:${PORT}`);
-});
+if (process.env.VERCEL !== "1") {
+  server.listen(PORT, () => {
+    console.log(`Server + Socket running at http://localhost:${PORT}`);
+  });
+}
+
+export default app;
