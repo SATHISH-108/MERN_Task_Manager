@@ -18,7 +18,10 @@ const app = express();
 const PORT = process.env.PORT || 7002;
 
 const server = http.createServer(app);
-const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "http://localhost:5173";
+const CLIENT_ORIGIN =
+  process.env.CLIENT_ORIGIN ||
+  "http://localhost:5173" ||
+  "https://mern-task-manager-hnjf.vercel.app";
 
 const io = new Server(server, {
   cors: {

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:7001/api",
+  baseURL: "https://mern-task-manager-rho-five.vercel.app/api",
   withCredentials: true,
 });
 
